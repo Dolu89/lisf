@@ -13,6 +13,42 @@
 		<![endif]-->
 </head>
 <body>
-	
+	<?php 
+
+		$folders = array();
+
+		$exclude_list = array(".", "..", ".git", ".gitignore", "README.md", "index.php", ".DS_Store");
+		$install_path = "/lisf/";
+
+		if (isset($_GET["dir"])) {
+		  $dir_path = $_SERVER["DOCUMENT_ROOT"].$install_path.$_GET["dir"];
+		}
+		else {
+		  $dir_path = $_SERVER["DOCUMENT_ROOT"].$install_path;
+		}
+
+		function dir_nav() {
+			global $exclude_list, $dir_path;
+			$directories = array_diff(scandir($dir_path), $exclude_list);
+			echo "<ul>";
+			foreach($directories as $entry) {
+				if(is_dir($dir_path.$entry)) {
+					echo "<li><a href='?dir=".$_GET["dir"].$entry."/"."'>".$entry."</a></li>";
+				}
+			}
+			echo "</ul>";
+
+			echo "<ul>";
+			foreach($directories as $entry) {
+				if(is_file($dir_path.$entry)) {
+					echo "<li><a href=".$install_path.$_GET["dir"].$entry.">".$entry."</a></li>";
+				}
+			}
+			echo "</ul>";
+		}
+
+		dir_nav();
+
+	 ?>
 </body>
 </html>
