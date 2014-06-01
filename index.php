@@ -13,7 +13,24 @@
 		<![endif]-->
 </head>
 <body>
-	<?php 
+	<?php
+
+		/* Déclaration des variables */
+
+		//Variable à modifier
+		$install_path = "/lisf/";
+
+		//Ne pas toucher au reste, sauf si vous savez ce que vous faites.
+		$folders = array();
+		$todayYear = date("Y");
+		$todayMonth = date("m");
+		$todayFolderFormat = $todayYear."-".$todayMonth;
+
+		$exclude_list = array(".", "..", ".git", ".gitignore", "README.md", "index.php", ".DS_Store");
+
+		$dir_path = $_SERVER["DOCUMENT_ROOT"].$install_path;
+		/* Fin de la déclaration des variables */
+
 		/* Fonctions */
 		function dir_nav($specificFolder) {
 			global $exclude_list, $dir_path;
@@ -43,14 +60,30 @@
 					echo "Rien ce mois-ci...";
 				}
 				else{
-					echo "Les fichiers du mois";
-					echo "<ul>";
-					foreach($files as $entry) {
-						if(is_file($dir."/".$entry)) {
-							echo "<li><a href=".$dir."/".$entry.">".$entry."</a></li>";
+					echo "Les fichiers du mois<br>";
+
+					$group = array();
+					foreach ( $files as $value ) {
+						$date = date("j", filectime($dir_path.$dir."/".$value));
+					    $group[$date][] = array($date => $value);
+					}
+
+					foreach ($group as $subGroup) {
+						$x = 0;
+						foreach ($subGroup as $sSubGroup) {
+							foreach ($sSubGroup as $date => $file) {
+								if ($x == 0) {
+									echo $date."<br>";
+									echo "<a href=".$dir."/".$file.">".$file."</a><br>";
+								}
+								else{
+									echo "<a href=".$dir."/".$file.">".$file."</a><br>";
+								}
+								++$x;
+							}
 						}
 					}
-					echo "</ul>";
+
 				}
 			}
 
@@ -69,19 +102,6 @@
 
 		}
 		/* Fin des fonctions */
-
-		/* Déclaration des variables */
-		$folders = array();
-		$todayYear = date("Y");
-		$todayMonth = date("m");
-		$todayFolderFormat = $todayYear."-".$todayMonth;
-
-		$exclude_list = array(".", "..", ".git", ".gitignore", "README.md", "index.php", ".DS_Store");
-		$install_path = "/lisf/";
-
-		$dir_path = $_SERVER["DOCUMENT_ROOT"].$install_path;
-
-		/* Fin de la déclaration des variables */
 
 		/* Début du programme de base */
 		list_dir();
