@@ -64,7 +64,7 @@
 
 					$group = array();
 					foreach ( $files as $value ) {
-						$date = date("j", filemtime($dir_path.$dir."/".$value));
+						$date = date("j", filectime($dir_path.$dir."/".$value));
 					    $group[$date][] = array($date => $value);
 					}
 
