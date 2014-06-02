@@ -96,7 +96,7 @@
 							foreach ($sSubGroup as $date => $file){
 								$size = ceil(filesize($dir_path.$dir."/".$file)/1024);
 								$newFormat = str_replace(" ", "%20", $dir."/".$file);
-								echo "<td><a href='".$newFormat."'>".$file."</a></td><td>".$size." Mo</td>";
+								echo "<td><a href='".$newFormat."'>".$file."</a></td><td>".$size." Ko</td>";
 							}
 							echo "</tr>";
 						}
