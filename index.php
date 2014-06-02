@@ -18,7 +18,7 @@
 		/* Déclaration des variables */
 
 		//Variable à modifier
-		$install_path = "/lisf/";
+		$install_path = "./";
 
 		//Ne pas toucher au reste, sauf si vous savez ce que vous faites.
 		$folders = array();
@@ -28,19 +28,18 @@
 
 		$exclude_list = array(".", "..", ".git", ".gitignore", "README.md", "index.php", ".DS_Store");
 
-		$dir_path = $_SERVER["DOCUMENT_ROOT"].$install_path;
 		/* Fin de la déclaration des variables */
 
 		/* Fonctions */
 		function dir_nav($specificFolder) {
-			global $exclude_list, $dir_path;
+			global $exclude_list, $install_path;
 
 			if ($specificFolder == "") {
-				$directories = array_diff(scandir($dir_path), $exclude_list);
+				$directories = array_diff(scandir($install_path), $exclude_list);
 				echo "Archives";
 				echo "<ul>";
 				foreach($directories as $entry) {
-					if(is_dir($dir_path.$entry)) {
+					if(is_dir($install_path.$entry)) {
 						echo "<li><a href='?dir=".$entry."'>".$entry."</a></li>";
 					}
 				}
@@ -49,11 +48,11 @@
 			else {
 				if (isset($_GET["dir"])) {
 					$dir = $_GET["dir"];
-					$files = array_diff(scandir($dir_path.$dir), $exclude_list);
+					$files = array_diff(scandir($install_path.$dir), $exclude_list);
 				}
 				else{
 					$dir = $specificFolder;
-					$files = array_diff(scandir($dir_path.$dir), $exclude_list);
+					$files = array_diff(scandir($install_path.$dir), $exclude_list);
 				}
 				
 				if (count($files)==0) {
@@ -64,7 +63,7 @@
 
 					$group = array();
 					foreach ( $files as $value ) {
-						$date = date("j", filectime($dir_path.$dir."/".$value));
+						$date = date("j", filectime($install_path.$dir."/".$value));
 					    $group[$date][] = array($date => $value);
 					}
 
@@ -74,14 +73,14 @@
 							foreach ($sSubGroup as $date => $file) {
 								if ($x == 0) {
 									echo $date."<br>";
-									if (checkFileIsImage($dir_path.$dir."/".$file)){
+									if (checkFileIsImage($install_path.$dir."/".$file)){
 										$newFormatLink = str_replace(" ", "%20", $dir."/".$file);
 										$newFormatFile = str_replace(" ", "%20", $file);
 										echo "<a href='".$newFormatLink."'><img src='".$newFormatLink."' width='106' height='106' alt='".$newFormatFile."'></a>";
 									}
 								}
 								else{
-									if (checkFileIsImage($dir_path.$dir."/".$file)){
+									if (checkFileIsImage($install_path.$dir."/".$file)){
 										$newFormatLink = str_replace(" ", "%20", $dir."/".$file);
 										$newFormatFile = str_replace(" ", "%20", $file);
 										echo "<a href='".$newFormatLink."'><img src='".$newFormatLink."' width='106' height='106' alt='".$newFormatFile."'></a>";
@@ -94,7 +93,7 @@
 						foreach ($subGroup as $sSubGroup) {
 							echo "<tr>";
 							foreach ($sSubGroup as $date => $file){
-								$size = ceil(filesize($dir_path.$dir."/".$file)/1024);
+								$size = ceil(filesize($install_path.$dir."/".$file)/1024);
 								$newFormat = str_replace(" ", "%20", $dir."/".$file);
 								echo "<td><a href='".$newFormat."'>".$file."</a></td><td>".$size." Ko</td>";
 							}
@@ -136,10 +135,10 @@
 		function list_dir()
 		{
 
-			global $exclude_list, $dir_path, $folders;
-			$directories = array_diff(scandir($dir_path), $exclude_list);
+			global $exclude_list, $install_path, $folders;
+			$directories = array_diff(scandir($install_path), $exclude_list);
 			foreach($directories as $entry) {
-				if(is_dir($dir_path.$entry)) {
+				if(is_dir($install_path.$entry)) {
 					array_push($folders, $entry);
 				}
 			}
