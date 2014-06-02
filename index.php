@@ -64,7 +64,7 @@
 
 					$group = array();
 					foreach ( $files as $value ) {
-						$date = date("j", filectime($dir_path.$dir."/".$value));
+						$date = date("j", filemtime($dir_path.$dir."/".$value));
 					    $group[$date][] = array($date => $value);
 					}
 
@@ -74,19 +74,63 @@
 							foreach ($sSubGroup as $date => $file) {
 								if ($x == 0) {
 									echo $date."<br>";
-									echo "<a href=".$dir."/".$file.">".$file."</a><br>";
+									if (checkFileIsImage($dir_path.$dir."/".$file)){
+										$newFormatLink = str_replace(" ", "%20", $dir."/".$file);
+										$newFormatFile = str_replace(" ", "%20", $file);
+										echo "<a href='".$newFormatLink."'><img src='".$newFormatLink."' width='106' height='106' alt='".$newFormatFile."'></a>";
+									}
 								}
 								else{
-									echo "<a href=".$dir."/".$file.">".$file."</a><br>";
+									if (checkFileIsImage($dir_path.$dir."/".$file)){
+										$newFormatLink = str_replace(" ", "%20", $dir."/".$file);
+										$newFormatFile = str_replace(" ", "%20", $file);
+										echo "<a href='".$newFormatLink."'><img src='".$newFormatLink."' width='106' height='106' alt='".$newFormatFile."'></a>";
+									}
 								}
 								++$x;
 							}
 						}
+						echo "<table>";
+						foreach ($subGroup as $sSubGroup) {
+							echo "<tr>";
+							foreach ($sSubGroup as $date => $file){
+								$size = ceil(filesize($dir_path.$dir."/".$file)/1024);
+								$newFormat = str_replace(" ", "%20", $dir."/".$file);
+								echo "<td><a href='".$newFormat."'>".$file."</a></td><td>".$size." Mo</td>";
+							}
+							echo "</tr>";
+						}
+						echo "</table>";
 					}
 
 				}
 			}
 
+		}
+
+		function checkFileIsImage($file){
+			$isImage = false;
+
+			$imgMimeType = array(
+				'image/png',
+				'image/jpeg',
+				'image/jpeg',
+				'image/jpeg',
+				'image/gif',
+				'image/bmp',
+				'image/vnd.microsoft.icon',
+				'image/tiff',
+				'image/tiff',
+				'image/svg+xml',
+				'image/svg+xml'
+				);
+
+			foreach ($imgMimeType as $type) {
+				if(mime_content_type($file) == $type){
+					$isImage = true;
+				}
+			}
+			return $isImage;
 		}
 
 		function list_dir()
